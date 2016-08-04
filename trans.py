@@ -80,9 +80,9 @@ for index in data["resource"]["events"]:
 # 		del map[index]
 
 nodes =[]
-i = 1
+i = 0
 for index in map:
-	d ={"id":index,"group":i}
+	d ={"name":index,"group":i}
 	i = i+1;
 	nodes.append(d)
 

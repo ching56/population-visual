@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+    <title>Population.tw</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif:400,700" rel="stylesheet">
+</head>
+<style>
+
+html, body {
+    height: 100%;
+}
+html {
+    display: table;
+    margin: auto;
+}
+body {
+  display: table-cell;
+  vertical-align: middle;
+  font: 10px sans-serif;
+}
+h1, h2{
+  font-family: 'PT Serif', serif;
+  text-align: center;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+.overlay {
+  fill: none;
+  pointer-events: all;
+}
+button{
+  margin-left: 15px;
+}
+.focus circle {
+  fill: none;
+  stroke: steelblue;
+}
+.option{
+  margin: 30px;
+}
+div.tooltip { 
+    position: absolute;     
+    text-align: left;     
+    width: 100px;          
+    height: 28px;         
+    padding: 20px;       
+    font: 10px;
+    color: white;
+    background: darkblue; 
+    border: 0px;    
+    line-height:20px;
+    border-radius: 6px;     
+    pointer-events: none;
+}
+div.tooltip .arrow_b_out{
+  width:0px;
+  height:0px;
+  border-width:15px;
+  border-style:solid;
+  border-color:darkblue transparent transparent transparent ;
+  position:absolute;
+  bottom:-29px;
+  right:35px;
+}
+</style>
+<body>
+	<h1>What's my place in Taiwan?</h1>
+	<h2>The Journey of your life in numbers and dates!</br>Please enter your age, hometown and sex at birth:</h2>
+  <div align="center" class="option">
+	<select class="age" id="age"><option value="age">age</option></select>
+	<select id="gender">
+		<option value="gender">gender</option>
+		<option value="male">male</option>
+		<option value="female">female</option>
+	</select>
+  <select class="hometown" id="hometown"><option value="hometown">hometown</option></select>
+	<button id="go" type="button">Go!</button>
+  </div>
+  <div>
+    <h3 id="result"><br></h3>
+  </div>
+  <div class="chart"></div>
+  <!-- <div class="tooltip" id="tips"><span class="arrow_r_out"></span></div> -->
+  <script type="text/javascript" src="main.js"></script>
+</body>
+</html>

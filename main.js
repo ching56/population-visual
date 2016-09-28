@@ -1,15 +1,32 @@
 $(function(){
-    var $select = $(".age");
+    var $select = $("#age-menu");
     for (i=10;i<=80;i++){
-        $select.append($('<option></option>').val(i).html(i))
+        $select.append("<div class=\"item\" data-value="+i+">"+i+"</div>");
     }
 });
 
+$('.ui.dropdown').dropdown({
+  });
+
+var age = 10, hometown ="臺南市";
+
+$('#hometown').dropdown({
+    onChange: function(value,text) {
+      hometown = text;
+      console.log(hometown);
+    }
+  })
+;
+$('#age').dropdown({
+    onChange: function(value,text) {
+      age = text;
+      console.log(age);
+    }
+  })
+;
+
 document.getElementById("go").onclick = function () { 
 
-  var hometown = document.getElementById("hometown");
-   hometown =hometown.options[hometown.selectedIndex].value;
-console.log(hometown);
 
 d3.select("svg").remove();
 d3.select(".ProgressBar").remove();
@@ -36,7 +53,7 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-    .ticks(3);
+    .ticks(4);
 
 var line = d3.svg.line()
     .x(function(d) { return x(d.age); })
@@ -88,18 +105,17 @@ d3.csv("data/"+hometown+".csv", function(error, data) {
   svg.append("text")
     .attr("class", "y label")
     .attr("text-anchor", "end")
-    .attr("y", 6)
-    .attr("dy", ".75em")
+    .attr("y", -5)
     .text("人口數（人）");
 
   var mainLine = svg.append("path")
       .datum(data)
       .attr("class", "line")
       .attr("d", line)
-      .style("opacity",.6);
+      .style("stroke", "steelblue")
+      .style("opacity",.3);
 
-    var e = document.getElementById("age");
-    var text = e.options[e.selectedIndex].text;
+    var text = age;
     var i = bisectAge(data, text,1),
     d0 = data[i - 1],
     d1 = data[i],
@@ -124,17 +140,14 @@ d3.csv("data/"+hometown+".csv", function(error, data) {
         .attr("class", "area")
         .attr("d", area)
         .style("opacity",0.3)
-        .style("fill", "steelblue");;
+        .style("fill", "steelblue");
 
   var verticalText = svg.append("text");
   var verticalFixed = svg.append("line");
   var verticalCircle = svg.append("circle")
       .attr("r", 4.5).style("opacity",0);
 
-  var rect = svg.append("rect")
-  .attr("width", width)
-  .attr("height", height)
-  .attr("fill","transparent");
+
 
   var verticalLine = svg.append('line')
 // .attr('transform', 'translate(100, 50)')
@@ -154,6 +167,11 @@ circle = svg.append("circle")
     fill: 'darkred'
 
 });
+    var rect = svg.append("rect")
+  .attr("width", width)
+  .attr("height", height)
+  .attr("fill","transparent")
+  .attr("z-index",999);
 
     rect.on('mousemove', function () {
 
@@ -161,7 +179,16 @@ circle = svg.append("circle")
     d3.select(".verticalLine").attr("transform", function () {
         return "translate(" + xPos + ",0)";
     });
+    // rect.on('mouseenter', function () {
+    // d3.select(".verticalLine").attr("opacity", 1)
+    // console.log("enter")
+    // });
+    // rect.on('mouseleave', function () {
+    // d3.select(".verticalLine").attr("opacity", 0)
+    // console.log("leave")
+    // });
 
+    
 
     var pathLength = mainLine.node().getTotalLength();
     var fx = xPos;
@@ -186,9 +213,21 @@ circle = svg.append("circle")
         d0 = data[i - 1],
         d1 = data[i],
         d = x0 - d0.age > d1.age - x0 ? d1 : d0;
-    div.transition().style("opacity", .6); 
+    div.style("opacity", .6); 
     div.html("年紀："+d.age + "<br/>"  + "人數："+d.value)  
                     .style("left", fx + "px");
+    $( "rect" ).hover(
+                function( ){
+                    d3.select(".verticalLine").attr("opacity", 1);
+                    div.style("opacity", .6);
+                    circle.attr("opacity", 1);
+                },
+                function(  ){
+                    d3.select(".verticalLine").attr("opacity", 0);
+                    div.transition().style("opacity", 0);
+                    circle.attr("opacity", 0);
+                }
+    );
 
 });
     
@@ -216,18 +255,22 @@ circle = svg.append("circle")
         .style("font-size","15px")
         .attr("fill", "red");
     
-
-var e = document.getElementById("age");
-var text = e.options[e.selectedIndex].text;
+var text = age;
 var percentage = parseInt(text)/79.84;
-    var hometown = document.getElementById("hometown");
-   hometown =hometown.options[hometown.selectedIndex].value;
 
-    document.getElementById("chart-descript").innerHTML ="<p>在<span class=\"highlight\">"+hometown+"</span>，<br>有 "+percent.toFixed(2)+" % 的人與您同年，<br>即 "
+    document.getElementById("chart-descript").innerHTML ="<h3 class=\"highlight\">您在當地人口結構的位置</h3><p>在<span class=\"highlight\">"+hometown+"</span>，<br>有 "+percent.toFixed(2)+" % 的人與您同年，<br>即 "
     +d2.value+" 人，<br>同時僅有 <span class=\"highlight\">"+YoungerPercent.toFixed(2)+" %</span> 的人比您還要年輕。</p>";
-    document.getElementById("circle-descript").innerHTML = "<p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，只度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> 的時光。</p>";
+    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，只度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> 的時光。</p>";
 
-document.getElementById("bottomtext").innerHTML = "所以說，人生還長，莫嘆已老。";
+if(age < 20){
+  document.getElementById("bottomtext").innerHTML = "人生才要開始，你有無限的可能。";
+}else if(age>=20 && age < 40){
+  document.getElementById("bottomtext").innerHTML = "所以說，人生還長，莫嘆已老。";
+}else if(age>=40 && age < 60){
+  document.getElementById("bottomtext").innerHTML = "人生過半，但求沒有遺憾。";
+}else{
+  document.getElementById("bottomtext").innerHTML = "歲月如梭，青春不老。";
+}
 
 var bar = new ProgressBar.Circle(container, {
   color: '#aaa',
@@ -259,7 +302,7 @@ var bar = new ProgressBar.Circle(container, {
 bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
 bar.text.style.fontSize = '1rem';
 
-
+document.getElementById("chart-descript").scrollIntoView()
 
 console.log(percentage.toFixed(2));
 bar.animate(percentage.toFixed(2));

@@ -259,8 +259,8 @@ var text = age;
 var percentage = parseInt(text)/79.84;
 
     document.getElementById("chart-descript").innerHTML ="<h3 class=\"highlight\">您在當地人口結構的位置</h3><p>在<span class=\"highlight\">"+hometown+"</span>，<br>有 "+percent.toFixed(2)+" % 的人與您同年，<br>即 "
-    +d2.value+" 人，<br>同時僅有 <span class=\"highlight\">"+YoungerPercent.toFixed(2)+" %</span> 的人比您還要年輕。</p>";
-    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，只度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> 的時光。</p>";
+    +d2.value+" 人，<br>同時僅有 <span class=\"highlight\">"+YoungerPercent.toFixed(2)+" %</span><br>的人比您還要年輕。</p>";
+    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，只度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> <br>的時光。</p>";
 
 if(age < 20){
   document.getElementById("bottomtext").innerHTML = "人生才要開始，你有無限的可能。";

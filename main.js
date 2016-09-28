@@ -5,8 +5,8 @@ $(function(){
     }
 });
 
-$('.ui.dropdown').dropdown({
-  });
+$('#age').dropdown();
+$('#hometown').dropdown();
 
 var age = 10, hometown ="臺南市";
 

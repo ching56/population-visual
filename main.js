@@ -8,6 +8,11 @@ $(function(){
 $('#age').dropdown();
 $('#hometown').dropdown();
 
+$('.ui.dropdown .menu .item')
+     .on('touchstart', function(e){
+           e.stopPropagation()
+    });
+     
 var age = 10, hometown ="臺南市";
 
 $('#hometown').dropdown({

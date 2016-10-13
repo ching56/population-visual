@@ -1,34 +1,30 @@
 $(function(){
-    var $select = $("#age-menu");
+    var $select = $("#age");
     for (i=10;i<=80;i++){
-        $select.append("<div class=\"item\" data-value="+i+">"+i+"</div>");
+        $select.append("<option value=\""+i+"\">"+i+"</option>");
     }
 });
 
-$('#age').dropdown();
-$('#hometown').dropdown();
+var age = 10, hometown ="南投縣";
+// $('#age').dropdown();
 
-$('.ui.dropdown .menu .item')
-     .on('touchstart', function(e){
-           e.stopPropagation()
-    });
-     
-var age = 10, hometown ="臺南市";
+function getHometown(sel){
+  hometown = sel.value;
+}
+function getAge(sel){
+  age = sel.value;
+}
 
-$('#hometown').dropdown({
-    onChange: function(value,text) {
-      hometown = text;
-      console.log(hometown);
-    }
-  })
-;
-$('#age').dropdown({
-    onChange: function(value,text) {
-      age = text;
-      console.log(age);
-    }
-  })
-;
+function detectmob() { 
+ if($(window).width()<900){
+    console.log("mobile!")
+    return true;
+  }
+ else {
+    console.log("web!")
+    return false;
+  }
+}
 
 document.getElementById("go").onclick = function () { 
 
@@ -38,9 +34,16 @@ d3.select(".ProgressBar").remove();
 d3.select(".tooltip").remove();
 $("#container").html('');
 
-var margin = {top: 100, right: 50, bottom: 30, left: 80},
-    width = 450 - margin.left - margin.right,
+if(detectmob()){
+  var margin = {top: 100, right: 50, bottom: 30, left: 80},
+    width = 300 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+}else{
+  var margin = {top: 100, right: 50, bottom: 30, left: 80},
+    width = 500 - margin.left - margin.right,
     height = 300 - margin.top - margin.bottom;
+}
 
 var bisectAge = d3.bisector(function(d) { return d.age; }).left;
 
@@ -55,22 +58,31 @@ var xAxis = d3.svg.axis()
     .orient("bottom")
     .ticks(6);
 
-var yAxis = d3.svg.axis()
+
+if(detectmob()){
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    .ticks(3);
+}else{
+  var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
     .ticks(4);
+}
+
 
 var line = d3.svg.line()
     .x(function(d) { return x(d.age); })
     .y(function(d) { return y(d.value); });
 
-var svg = d3.select(".chart").append("svg")
+var svg = d3.select(".line-chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var div = d3.select(".chart").append("div").attr("class", "tooltip").style("opacity",0);
+var div = d3.select(".line-chart").append("div").attr("class", "tooltip").style("opacity",0);
 
 var totalPopulation = 0; 
 
@@ -117,8 +129,8 @@ d3.csv("data/"+hometown+".csv", function(error, data) {
       .datum(data)
       .attr("class", "line")
       .attr("d", line)
-      .style("stroke", "steelblue")
-      .style("opacity",.3);
+      .style("stroke", "#495057")
+      .style("opacity",.2);
 
     var text = age;
     var i = bisectAge(data, text,1),
@@ -144,8 +156,8 @@ d3.csv("data/"+hometown+".csv", function(error, data) {
         .datum(data)
         .attr("class", "area")
         .attr("d", area)
-        .style("opacity",0.3)
-        .style("fill", "steelblue");
+        .style("opacity",0.5)
+        .style("fill", "#4c6ef5");
 
   var verticalText = svg.append("text");
   var verticalFixed = svg.append("line");
@@ -257,15 +269,15 @@ circle = svg.append("circle")
         .attr("x",x(d2.age)+"px")
         .attr("y",y(d2.value)-35+"px")
         .text(YoungerPercent.toFixed(2)+"%")
-        .style("font-size","15px")
-        .attr("fill", "red");
+        .style("font-size","12px")
+        .attr("fill", "#4c6ef5");
     
 var text = age;
 var percentage = parseInt(text)/79.84;
 
-    document.getElementById("chart-descript").innerHTML ="<h3 class=\"highlight\">您在當地人口結構的位置</h3><p>在<span class=\"highlight\">"+hometown+"</span>，<br>有 "+percent.toFixed(2)+" % 的人與您同年，<br>即 "
-    +d2.value+" 人，<br>同時僅有 <span class=\"highlight\">"+YoungerPercent.toFixed(2)+" %</span><br>的人比您還要年輕。</p>";
-    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，只度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> <br>的時光。</p>";
+    document.getElementById("chart-descript").innerHTML ="<h3 class=\"highlight\">您在當地年齡結構的位置</h3><p>在<span class=\"highlight\">"+hometown+"</span>，<br>有 "+percent.toFixed(2)+" % 的人與您同年，<br>即 "
+    +d2.value+" 人，<br>同時有 <span class=\"highlight\">"+YoungerPercent.toFixed(2)+" %</span><br>的人比您還要年輕。</p>";
+    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> <br>的時光。</p>";
 
 if(age < 20){
   document.getElementById("bottomtext").innerHTML = "人生才要開始，你有無限的可能。";
@@ -288,7 +300,7 @@ var bar = new ProgressBar.Circle(container, {
   text: {
     autoStyleContainer: false
   },
-  from: { color: '#5555ff', width: 4 },
+  from: { color: '#4c6ef5', width: 4 },
   to: { color: '#ff5555', width: 4 },
   // Set default step function for all animate calls
   step: function(state, circle) {
@@ -299,16 +311,13 @@ var bar = new ProgressBar.Circle(container, {
     if (value === 0) {
       circle.setText('');
     } else {
-      circle.setText(text+' / 79.84(歲)');
+      circle.setText(text+' / 79.84 歲');
     }
 
   }
 });
 bar.text.style.fontFamily = '"Raleway", Helvetica, sans-serif';
 bar.text.style.fontSize = '1rem';
-
-document.getElementById("chart-descript").scrollIntoView()
-
 console.log(percentage.toFixed(2));
 bar.animate(percentage.toFixed(2));
 

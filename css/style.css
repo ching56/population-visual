@@ -7,6 +7,15 @@
   color: #666666;
   text-align: center;
 }
+.ref-text{
+  font-family: 'cwTeXYen', sans-serif;
+  font-size: 15px;
+  letter-spacing: 4px;
+  line-height: 25px;
+  font-weight: normal;
+  color: #878787;
+  text-align: center;
+}
 .axis path,
 .axis line {
   fill: none;

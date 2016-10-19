@@ -32,6 +32,19 @@ document.getElementById("go").onclick = function () {
 d3.select("svg").remove();
 d3.select(".ProgressBar").remove();
 d3.select(".tooltip").remove();
+$("#main-container").html('\
+  <div class="row">\
+  <div class="column">\
+    <div id="chart-descript"></div>\
+    <div class="line-chart"></div>\
+  </div>\
+  <div class="column">\
+    <div id="circle-descript"></div>\
+    <div id="container"></div>\
+  </div>\
+  </div>\
+  <div id="bottomtext"></div>\
+  </div>');
 $("#container").html('');
 
 if(detectmob()){
@@ -110,7 +123,7 @@ d3.csv("data/"+hometown+".csv", function(error, data) {
     .attr("class", "x label")
     .attr("text-anchor", "end")
     .attr("x", width)
-    .attr("y", height - 6)
+    .attr("y", height - 15)
     .text("年紀（年）");
       
 
@@ -122,7 +135,8 @@ d3.csv("data/"+hometown+".csv", function(error, data) {
   svg.append("text")
     .attr("class", "y label")
     .attr("text-anchor", "end")
-    .attr("y", -5)
+    .attr("y", -15)
+    .attr("x", 10)
     .text("人口數（人）");
 
   var mainLine = svg.append("path")
@@ -264,6 +278,7 @@ circle = svg.append("circle")
         .style("stroke-width", 2)
         .style("fill", "gray")
         .style("stroke", "white");
+  if(detectmob()){
     verticalText
         .style("text-anchor", "middle")
         .attr("x",x(d2.age)+"px")
@@ -271,13 +286,22 @@ circle = svg.append("circle")
         .text(YoungerPercent.toFixed(2)+"%")
         .style("font-size","12px")
         .attr("fill", "#4c6ef5");
+  }else{
+    verticalText
+        .style("text-anchor", "middle")
+        .attr("x",x(d2.age)+"px")
+        .attr("y",y(d2.value)-35+"px")
+        .text(YoungerPercent.toFixed(2)+"%")
+        .style("font-size","20px")
+        .attr("fill", "#4c6ef5");
+  }
     
 var text = age;
-var percentage = parseInt(text)/79.84;
+var percentage = parseInt(text)/80.2;
 
     document.getElementById("chart-descript").innerHTML ="<h3 class=\"highlight\">您在當地年齡結構的位置</h3><p>在<span class=\"highlight\">"+hometown+"</span>，<br>有 "+percent.toFixed(2)+" % 的人與您同年，<br>即 "
     +d2.value+" 人，<br>同時有 <span class=\"highlight\">"+YoungerPercent.toFixed(2)+" %</span><br>的人比您還要年輕。</p>";
-    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在103年的調查中，<br>台灣人平均壽命為 79.84 歲，<br>以您而言，度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> <br>的時光。</p>";
+    document.getElementById("circle-descript").innerHTML = "<h3 class=\"highlight\">您的平均餘命</h3><p>而在 104 年的調查中，<br>台灣人平均壽命為 80.20 歲，<br>以您而言，度過了 <span class=\"highlight\">"+(percentage*100).toFixed(2)+" %</span> <br>的時光。</p>";
 
 if(age < 20){
   document.getElementById("bottomtext").innerHTML = "人生才要開始，你有無限的可能。";
@@ -311,7 +335,7 @@ var bar = new ProgressBar.Circle(container, {
     if (value === 0) {
       circle.setText('');
     } else {
-      circle.setText(text+' / 79.84 歲');
+      circle.setText(text+' / 80.20 歲');
     }
 
   }

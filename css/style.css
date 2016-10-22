@@ -89,8 +89,6 @@ div.default.text, div.text{
 }
 .age{
   margin-right: 15px;
-  font-size: 16px;
-  font-family: sans-serif;
 }
 .column{
   display: inline-block;
@@ -116,6 +114,9 @@ div.default.text, div.text{
 }
 #age,#hometown{
   margin-right: 30px;
+  font-size: 16px;
+  font-family: sans-serif;
+}
 }
 p {
   font-size: 15px;
